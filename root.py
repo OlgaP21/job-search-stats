@@ -15,6 +15,7 @@ class Root(tk.Tk):
         self.resizable(False, False)
         self.title('My Job Search Stats')
         self._notebook = TabControl(self)
+        Data.setup()
 
 
 class Style(ttk.Style):

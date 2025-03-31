@@ -6,19 +6,28 @@ from stats import Stats
 
 class Data:
     
+    _directory = os.getcwd() + '\\data'
+    
     _cvkeskus_file = os.getcwd() + '\\data\\cvkeskus_data.pkl'
     _cvee_file = os.getcwd() + '\\data\\cvee_data.pkl'
     _tootukassa_file = os.getcwd() + '\\data\\tootukassa_data.pkl'
     _letter_file = os.getcwd() + '\\data\\letter_data.pkl'
     _other_file = os.getcwd() + '\\data\\other_data.pkl'
     
-    _source = ''
-    _current_file = ''
     _status_to_index = {
         'Eitav vastus': 1,
         'Vastust pole': 2,
         'TBD': 3
     }
+    
+    _source = ''
+    _current_file = ''
+    
+    
+    @staticmethod
+    def setup():
+        if not os.path.exists(Data._directory):
+            os.makedirs(Data._directory)
     
     
     # Method for loading specified Source data from the file
