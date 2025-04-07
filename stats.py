@@ -11,87 +11,116 @@ class Stats:
     
     # Method for updating Source statistics
     @staticmethod
-    def update(source: str, new_status: int, old_status: int = None) -> None:
+    def update(source: str, new_status: int, old_status: int=None, delete=False) -> None:
         if source == 'CVKeskus':
-            Stats._update_cvkeskus(new_status, old_status)
+            Stats._update_cvkeskus(new_status, old_status, delete)
         elif source == 'cv.ee':
-            Stats._update_cvee(new_status, old_status)
+            Stats._update_cvee(new_status, old_status, delete)
         elif source == 'Töötukassa':
-            Stats._update_tootukassa(new_status, old_status)
+            Stats._update_tootukassa(new_status, old_status, delete)
         elif source == 'E-kiri':
-            Stats._update_letters(new_status, old_status)
+            Stats._update_letters(new_status, old_status, delete)
         elif source == 'Muu':
-            Stats._update_other(new_status, old_status)
+            Stats._update_other(new_status, old_status, delete)
 
 
     # Method for updating Kokku statistics
     @staticmethod
-    def _update_total(new_status: int, old_status: int = None) -> None:
-        Stats._total_applications[new_status] += 1
-        if old_status:
-            Stats._total_applications[old_status] -= 1
+    def _update_total(new_status: int, old_status: int=None, delete=False) -> None:
+        if delete:
+            Stats._total_applications[new_status] -= 1
+            Stats._total_applications[0] -= 1
         else:
-            Stats._total_applications[0] += 1
+            Stats._total_applications[new_status] += 1
+            if old_status:
+                Stats._total_applications[old_status] -= 1
+            else:
+                Stats._total_applications[0] += 1
     
     
     # Method for updating CVKeskus statistics
     @staticmethod
-    def _update_cvkeskus(new_status: int, old_status: int = None) -> None:
-        Stats._cvkeskus_applications[new_status] += 1
-        if old_status:
-            Stats._cvkeskus_applications[old_status] -= 1
-            Stats._update_total(new_status, old_status)
+    def _update_cvkeskus(new_status: int, old_status: int=None, delete=False) -> None:
+        if delete:
+            Stats._cvkeskus_applications[new_status] -= 1
+            Stats._cvkeskus_applications[0] -= 1
+            Stats._update_total(new_status, delete=True)
         else:
-            Stats._cvkeskus_applications[0] += 1
-            Stats._update_total(new_status)
+            Stats._cvkeskus_applications[new_status] += 1
+            if old_status:
+                Stats._cvkeskus_applications[old_status] -= 1
+                Stats._update_total(new_status, old_status)
+            else:
+                Stats._cvkeskus_applications[0] += 1
+                Stats._update_total(new_status)
     
     
     # Method for updating cv.ee statistics
     @staticmethod
-    def _update_cvee(new_status: int, old_status: int = None) -> None:
-        Stats._cvee_applications[new_status] += 1
-        if old_status:
-            Stats._cvee_applications[old_status] -= 1
-            Stats._update_total(new_status, old_status)
+    def _update_cvee(new_status: int, old_status: int=None, delete=False) -> None:
+        if delete:
+            Stats._cvee_applications[new_status] -= 1
+            Stats._cvee_applications[0] -= 1
+            Stats._update_total(new_status, delete=True)
         else:
-            Stats._cvee_applications[0] += 1
-            Stats._update_total(new_status)
+            Stats._cvee_applications[new_status] += 1
+            if old_status:
+                Stats._cvee_applications[old_status] -= 1
+                Stats._update_total(new_status, old_status)
+            else:
+                Stats._cvee_applications[0] += 1
+                Stats._update_total(new_status)
     
     
     # Method for updating Töötukassa statistics
     @staticmethod
-    def _update_tootukassa(new_status: int, old_status: int = None) -> None:
-        Stats._tootukassa_applications[new_status] += 1
-        if old_status:
-            Stats._tootukassa_applications[old_status] -= 1
-            Stats._update_total(new_status, old_status)
+    def _update_tootukassa(new_status: int, old_status: int=None, delete=False) -> None:
+        if delete:
+            Stats._tootukassa_applications[new_status] -= 1
+            Stats._tootukassa_applications[0] -= 1
+            Stats._update_total(new_status, delete=True)
         else:
-            Stats._tootukassa_applications[0] += 1
-            Stats._update_total(new_status)
+            Stats._tootukassa_applications[new_status] += 1
+            if old_status:
+                Stats._tootukassa_applications[old_status] -= 1
+                Stats._update_total(new_status, old_status)
+            else:
+                Stats._tootukassa_applications[0] += 1
+                Stats._update_total(new_status)
     
     
     # Method for updating E-kiri statistics
     @staticmethod
-    def _update_letters(new_status: int, old_status: int = None) -> None:
-        Stats._letters_applications[new_status] += 1
-        if old_status:
-            Stats._letters_applications[old_status] += 1
-            Stats._update_total(new_status, old_status)
+    def _update_letters(new_status: int, old_status: int=None, delete=False) -> None:
+        if delete:
+            Stats._letters_applications[new_status] -= 1
+            Stats._letters_applications[0] -= 1
+            Stats._update_total(new_status, delete=True)
         else:
-            Stats._letters_applications[0] += 1
-            Stats._update_total(new_status)
+            Stats._letters_applications[new_status] += 1
+            if old_status:
+                Stats._letters_applications[old_status] += 1
+                Stats._update_total(new_status, old_status)
+            else:
+                Stats._letters_applications[0] += 1
+                Stats._update_total(new_status)
     
     
     # Method for updating Muu statistics
     @staticmethod
-    def _update_other(new_status: int, old_status: int = None) -> None:
-        Stats._other_applications[new_status] += 1
-        if old_status:
-            Stats._other_applications[old_status] -= 1
-            Stats._update_total(new_status, old_status)
+    def _update_other(new_status: int, old_status: int=None, delete=False) -> None:
+        if delete:
+            Stats._other_applications[new_status] -= 1
+            Stats._other_applications[0] -= 1
+            Stats._update_total(new_status, delete=True)
         else:
-            Stats._other_applications[0] += 1
-            Stats._update_total(new_status)
+            Stats._other_applications[new_status] += 1
+            if old_status:
+                Stats._other_applications[old_status] -= 1
+                Stats._update_total(new_status, old_status)
+            else:
+                Stats._other_applications[0] += 1
+                Stats._update_total(new_status)
     
     
     # Methood for calculating Source:
