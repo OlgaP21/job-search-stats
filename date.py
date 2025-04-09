@@ -46,7 +46,7 @@ class Date:
     def set_date(self, day: int, month: str, year: int) -> None:
         if self._date_valid(day, int(self._MONTH_TO_ID[month]), year):
             self.day = day
-            self.month = self._MONTH_TO_ID[month]
+            self.month = int(self._MONTH_TO_ID[month])
             self.year = year
         else:
             # Raise an exception and handle it later
@@ -63,6 +63,20 @@ class Date:
         if month == 2 and not isleap(year) and day > 28:
             return False
         return True
+    
+    
+    def is_changed(self, new_date):
+        changed = False
+        if self.day != int(new_date[0]):
+            changed = True
+        if self.month != self._MONTH_TO_ID[new_date[1]]:
+            changed = True
+        if self.year != int(new_date[2]):
+            changed = True
+        if changed and not self._date_valid(int(new_data[0]), self._MONTH_TO_ID[new_date[1]], int(new_date[2])):
+            changed = False
+        return changed
+    
     
     @staticmethod
     def month_from_id(self, month):

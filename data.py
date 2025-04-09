@@ -114,15 +114,13 @@ class Data:
     
     
     @staticmethod
-    def update_entry(source: str, index: int, application: list) -> None:
+    def update_entry(source: str, index: int, application_data: list) -> None:
         applications = Data._load_objects_data(source)
-        if applications:
-            applications[index].set_date(application[1], application[2], application[3])
-            applications[index].set_title(application[5])
-            applications[index].set_company(application[6])
+        if not applications:
+            return
+        if applications[index].update(application_data):
             old_status = Data._status_to_index[str(applications[index].get_status())]
-            new_status = Data._status_to_index[application[4]]
-            applications[index].set_status(application[4])
+            new_status = Data._status_to_index[application_data[4]]
             Data._update_file(applications)
             Stats.update(Data._source, new_status, old_status)
     

@@ -67,6 +67,23 @@ class Application:
         return [date_value, title_value, company_value, status_value]
     
     
+    def update(self, data):
+        changed = False
+        if self.date.is_changed(data[1:4]):
+            self.date.set_date(int(data[1]), data[2], int(data[3]))
+            changed = True
+        if self.title != data[5]:
+            self.set_title(data[5])
+            changed = True
+        if self.company != data[6]:
+            self.set_company(data[6])
+            changed = True
+        if self.status != Status.from_string(data[4]):
+            self.set_status(data[4])
+            changed = True
+        return changed
+    
+    
     def __str__(self):
         return f'{self.source}, {self.date}, {self.title}, {self.company}, {self.status}'
 

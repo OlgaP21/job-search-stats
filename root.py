@@ -262,12 +262,27 @@ class Tree(ttk.Treeview):
     def delete_entry(self):
         if len(self.selection()) == 0:
             return
+        self._top = tk.Toplevel(self)
+        self._top.geometry('200x100')
+        self._top.title('Kindel?')
+        ttk.Label(self._top, text='Eemaldada kirje?').grid(row=0, column=0, columnspan=2, sticky='nsew', padx=25, pady=10)
+        ttk.Button(self._top, text='Jah', command=self._confirm_delete).grid(row=1, column=0, padx=10, pady=10)
+        ttk.Button(self._top, text='Ei', command=self._close_dialogue).grid(row=1, column=1, pady=10)
+    
+    
+    def _confirm_delete(self):
         self._selected_entry = self.selection()[0]
         self._entry_record = self.item(self._selected_entry)['values']
         self.delete(self._selected_entry)
-        Data.delete_entry(self.tab_name, self._entry_record[0] - 1)
+        Data.delete_entry(self.tab_name, self._entry_record[0]-1)
         self._parent.update_stats()
         self._update_indexes()
+        self._close_dialogue()
+    
+    
+    def _close_dialogue(self):
+        self._top.destroy()
+        self._top.update()
     
     
     def _update_indexes(self):
@@ -335,8 +350,8 @@ class Tree(ttk.Treeview):
         self._dropdown_menus[2].set_selected('month', int(date[1]))
         self._dropdown_menus[3].set_selected('year', int(date[2]))
         self._dropdown_menus[4].set_selected('status', self._entry_record[4])
-        self._input_fields[0].set_text(self._entry_record[2])
-        self._input_fields[1].set_text(self._entry_record[3])
+        self._input_fields[0].set_text(self._entry_record[2].replace('\n', ' '))
+        self._input_fields[1].set_text(self._entry_record[3].replace('\n', ' '))
     
     
     def _save_updated_entry(self):
@@ -345,8 +360,8 @@ class Tree(ttk.Treeview):
         month = self._dropdown_menus[2].get_selected()
         year = self._dropdown_menus[3].get_selected()
         status = self._dropdown_menus[4].get_selected()
-        title = self._input_fields[0].get_text()
-        company = self._input_fields[1].get_text()
+        title = self._input_fields[0].get_text().replace('\n', ' ')
+        company = self._input_fields[1].get_text().replace('\n', ' ')
         application_data = [source, day, month, year, status, title, company]
         Data.update_entry(self.tab_name, self._entry_record[0] - 1, application_data)
         self._update_table()
