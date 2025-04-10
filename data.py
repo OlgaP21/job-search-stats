@@ -25,7 +25,7 @@ class Data:
     
     
     @staticmethod
-    def setup():
+    def setup() -> None:
         if not os.path.exists(Data._directory):
             os.makedirs(Data._directory)
     

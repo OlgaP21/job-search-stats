@@ -1,12 +1,11 @@
 from date import Date
 from status import Status
 from source import Source
-import pickle
 
 
 class Application:
     
-    def __init__(self, source: str, day: str, month: str, year: str, title: str, company: str, status: str):
+    def __init__(self, source: str, day: str, month: str, year: str, title: str, company: str, status: str) -> None:
         self.source = Source.from_string(source)
         self.date = Date(int(day), month, int(year))
         self.title = title
@@ -58,7 +57,7 @@ class Application:
         self.status = Status.from_string(status)
     
     
-    def get_data(self):
+    def get_data(self) -> list:
         source_value = str(self.get_source())
         date_value = str(self.get_date())
         title_value = self.get_title()
@@ -67,7 +66,7 @@ class Application:
         return [date_value, title_value, company_value, status_value]
     
     
-    def update(self, data):
+    def update(self, data: list) -> bool:
         changed = False
         if self.date.is_changed(data[1:4]):
             self.date.set_date(int(data[1]), data[2], int(data[3]))
@@ -84,30 +83,5 @@ class Application:
         return changed
     
     
-    def __str__(self):
+    def __str__(self) -> str:
         return f'{self.source}, {self.date}, {self.title}, {self.company}, {self.status}'
-
-
-# PICKLE DATA ~UPLOADING AND ~DOWNLOADING EXAMPLE
-# with open('data.pkl', 'ab') as outp:
-#     a1 = Application('cv.ee', '24', 'Detsember', '2024', 'Title', 'Company', 'TBD')
-#     pickle.dump(a1, outp, pickle.HIGHEST_PROTOCOL)
-#     
-#     a2 = Application('CVKeskus', '25', 'Detsember', '2024', 'Other Title', 'Other Company', 'TBD')
-#     pickle.dump(a2, outp, pickle.HIGHEST_PROTOCOL)
-# 
-# 
-# 
-# del a1
-# del a2
-# 
-# with open('data.pkl', 'rb') as inp:
-#     a1 = pickle.load(inp)
-#     print(a1)
-#     
-#     a2 = pickle.load(inp)
-#     print(a2)
-
-# a1 = Application('cv.ee', '24', 'Detsember', '2024', 'Title', 'Company', 'TBD')
-# print(str(a1.get_status()))
-# print(type(str(a1.get_status())))

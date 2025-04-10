@@ -7,7 +7,7 @@ from stats import Stats
 
 class Root(tk.Tk):
     
-    def __init__(self):
+    def __init__(self) -> None:
         tk.Tk.__init__(self)
         self.style = Style(self)
         self.geometry('1020x670')
@@ -19,7 +19,7 @@ class Root(tk.Tk):
 
 class Style(ttk.Style):
     
-    def __init__(self, parent):
+    def __init__(self, parent: Root) -> None:
         ttk.Style.__init__(self, parent)
         self.theme_use('clam')
         self.configure('TNotebook.Tab', width=21)
@@ -40,13 +40,13 @@ class TabControl(ttk.Notebook):
     ]
     notebook_tabs = []
     
-    def __init__(self, parent):
+    def __init__(self, parent: Root) -> None:
         ttk.Notebook.__init__(self, parent)
         self._add_tabs()
         self.grid(row=0, column=0, sticky='nsew')
     
     
-    def _add_tabs(self):
+    def _add_tabs(self) -> None:
         for i, tab_name in enumerate(self._tab_names):
             if i == 0:
                 tab = TabAdd(self)
@@ -69,13 +69,13 @@ class TabControl(ttk.Notebook):
         self.notebook_tabs[index].add_application(application_data)
     
     
-    def update_statistics(self):
+    def update_statistics(self) -> None:
         self.notebook_tabs[-1].update_stats()
 
 
 class Tab(ttk.Frame):
     
-    def __init__(self, parent, name):
+    def __init__(self, parent: TabControl, name: str) -> None:
         ttk.Frame.__init__(self, parent)
         self.grid(row=0, column=0, sticky='nsew')
         self._table = Tree(self, name)
@@ -90,7 +90,7 @@ class Tab(ttk.Frame):
         self._table.add_new_entry(application_data)
     
     
-    def update_stats(self):
+    def update_stats(self) -> None:
         self._parent.update_statistics()
 
 
@@ -102,7 +102,7 @@ class TabAdd(ttk.Frame):
     _dropdown_menus = []
     _input_fields = []
     
-    def __init__(self, parent):
+    def __init__(self, parent: TabControl) -> None:
         ttk.Frame.__init__(self, parent)
         self.grid(row=0, column=0, sticky='nsew')
         self._parent = parent
@@ -112,29 +112,29 @@ class TabAdd(ttk.Frame):
         self._add_button()
     
     
-    def _add_labels(self):
+    def _add_labels(self) -> None:
         for name in self._dropdown_menu_names:
             AddLabel(self, name)
     
     
-    def _add_dropdown_menus(self):
+    def _add_dropdown_menus(self) -> None:
         for name in self._dropdown_menu_names:
             dropdown_menu = DropdownMenu(self, name)
             self._dropdown_menus.append(dropdown_menu)
     
     
-    def _add_input_fields(self):
+    def _add_input_fields(self) -> None:
         for name in self._input_field_names:
             input_field = InputField(self, name)
             self._input_fields.append(input_field)
     
     
-    def _add_button(self):
+    def _add_button(self) -> None:
         self._button = ttk.Button(self, text='Lisa', command=self._add_entry)
         self._button.grid(row=4, column=0, columnspan=5, sticky='nsew', padx=90, pady=30)
     
     
-    def _add_entry(self):
+    def _add_entry(self) -> None:
         source = self._dropdown_menus[0].get_selected()
         day = self._dropdown_menus[1].get_selected()
         month = self._dropdown_menus[2].get_selected()
@@ -149,14 +149,14 @@ class TabAdd(ttk.Frame):
         self._parent.update_statistics()
     
     
-    def _clear_fields(self):
+    def _clear_fields(self) -> None:
         for i in range(len(self._dropdown_menus)):
             self._dropdown_menus[i].reset_selected()
         for i in range(len(self._input_fields)):
             self._input_fields[i].reset_placeholder()
     
     
-    def _confirm(self):
+    def _confirm(self) -> None:
         self._top = tk.Toplevel(self)
         self._top.geometry('150x100')
         self._top.title('Kinnitus')
@@ -164,7 +164,7 @@ class TabAdd(ttk.Frame):
         ttk.Button(self._top, text='OK', command=self._close_dialogue).grid(row=1, column=0, padx=35, pady=10)
     
     
-    def _close_dialogue(self):
+    def _close_dialogue(self) -> None:
         self._top.destroy()
         self._top.update()
 
@@ -173,13 +173,13 @@ class TabStats(ttk.Frame):
     _sources = ['Kokku', 'CVKeskus', 'cv.ee', 'Töötukassa', 'E-kiri', 'Muu']
     _labels = []
     
-    def __init__(self, parent):
+    def __init__(self, parent: TabControl) -> None:
         ttk.Frame.__init__(self, parent)
         self.grid(row=0, column=0, sticky='nsew')
         self._add_stats()
     
     
-    def _add_stats(self):
+    def _add_stats(self) -> None:
         _index = 0
         for source in self._sources:
             total_n, responded_n, not_responded_n, tbd_n = Stats.get_numbers(source)
@@ -192,7 +192,7 @@ class TabStats(ttk.Frame):
             _index += 5
     
     
-    def update_stats(self):
+    def update_stats(self) -> None:
         _index = 0
         for source in self._sources:
             total_n, responded_n, not_responded_n, tbd_n = Stats.get_numbers(source)
@@ -222,7 +222,7 @@ class Tree(ttk.Treeview):
     _input_fields = []
     
     
-    def __init__(self, parent, name):
+    def __init__(self, parent: Tab, name: str) -> None:
         ttk.Treeview.__init__(self, parent, height=13, columns=tuple(self._columns.keys()), show='headings', selectmode='browse')
         self.grid(row=1, column=0, columnspan=2, sticky='nsew')
         self._parent = parent
@@ -231,7 +231,7 @@ class Tree(ttk.Treeview):
         self._load_data(name)
     
     
-    def _add_columns(self):
+    def _add_columns(self) -> None:
         for key in self._columns:
             self.column(key, anchor=tk.CENTER)
             self.heading(key, text=self._columns[key])
@@ -259,7 +259,7 @@ class Tree(ttk.Treeview):
         self._configure_tags()
     
     
-    def delete_entry(self):
+    def delete_entry(self) -> None:
         if len(self.selection()) == 0:
             return
         self._top = tk.Toplevel(self)
@@ -270,7 +270,7 @@ class Tree(ttk.Treeview):
         ttk.Button(self._top, text='Ei', command=self._close_dialogue).grid(row=1, column=1, pady=10)
     
     
-    def _confirm_delete(self):
+    def _confirm_delete(self) -> None:
         self._selected_entry = self.selection()[0]
         self._entry_record = self.item(self._selected_entry)['values']
         self.delete(self._selected_entry)
@@ -280,12 +280,12 @@ class Tree(ttk.Treeview):
         self._close_dialogue()
     
     
-    def _close_dialogue(self):
+    def _close_dialogue(self) -> None:
         self._top.destroy()
         self._top.update()
     
     
-    def _update_indexes(self):
+    def _update_indexes(self) -> None:
         for index, entry in enumerate(self.get_children()):
             self._entry_record = self.item(entry)['values']
             self._entry_record[0] = index + 1
@@ -296,7 +296,7 @@ class Tree(ttk.Treeview):
         self._configure_tags()
     
     
-    def edit_entry(self):
+    def edit_entry(self) -> None:
         if len(self.selection()) == 0:
             return
         self._dropdown_menus = []
@@ -306,12 +306,12 @@ class Tree(ttk.Treeview):
         self._edit_window()
     
     
-    def _edit_window(self):
+    def _edit_window(self) -> None:
         self._create_edit()
         self._insert_editable_data()
     
     
-    def _create_edit(self):
+    def _create_edit(self) -> None:
         self._top = tk.Toplevel(self)
         self._top.geometry('1020x270')
         self._top.title('Muuda kirje')
@@ -321,30 +321,30 @@ class Tree(ttk.Treeview):
         self._add_edit_button()
     
     
-    def _add_edit_labels(self):
+    def _add_edit_labels(self) -> None:
         for name in self._dropdown_menu_names:
             AddLabel(self._top, name)
     
     
-    def _add_edit_dropdown_menus(self):
+    def _add_edit_dropdown_menus(self) -> None:
         for name in self._dropdown_menu_names:
             dropdown_menu = DropdownMenu(self._top, name)
             self._dropdown_menus.append(dropdown_menu)
         self._dropdown_menus[0].configure(state='disabled')
     
     
-    def _add_edit_input_fields(self):
+    def _add_edit_input_fields(self) -> None:
         for name in self._input_field_names:
             input_field = InputField(self._top, name)
             self._input_fields.append(input_field)
     
     
-    def _add_edit_button(self):
+    def _add_edit_button(self) -> None:
         self._edit_button = ttk.Button(self._top, text='Muuda', command=self._save_updated_entry)
         self._edit_button.grid(row=4, column=0, columnspan=5, sticky='nsew', padx=90, pady=30)
     
     
-    def _insert_editable_data(self):
+    def _insert_editable_data(self) -> None:
         date = self._entry_record[1].split('.')
         self._dropdown_menus[1].set_selected('day', int(date[0]))
         self._dropdown_menus[2].set_selected('month', int(date[1]))
@@ -354,7 +354,7 @@ class Tree(ttk.Treeview):
         self._input_fields[1].set_text(self._entry_record[3].replace('\n', ' '))
     
     
-    def _save_updated_entry(self):
+    def _save_updated_entry(self) -> None:
         source = self._dropdown_menus[0].get_selected()
         day = self._dropdown_menus[1].get_selected()
         month = self._dropdown_menus[2].get_selected()
@@ -369,28 +369,28 @@ class Tree(ttk.Treeview):
         self._top.update()
     
     
-    def _update_table(self):
+    def _update_table(self) -> None:
         self._clear_table()
         self._load_data(self.tab_name)
     
     
-    def _clear_table(self):
+    def _clear_table(self) -> None:
         for entry in self.get_children():
             self.delete(entry)
     
     
-    def _wrap(self, text, length=35):
+    def _wrap(self, text: str, length: int=35) -> str:
         return '\n'.join(textwrap.wrap(text, length))
     
     
-    def _configure_tags(self):
+    def _configure_tags(self) -> None:
         self.tag_configure('oddrow', background='#c9c7bf')
         self.tag_configure('evenrow', background='#e3e0d5')
 
 
 class Scroll(ttk.Scrollbar):
     
-    def __init__(self, parent, obj):
+    def __init__(self, parent: Tab, obj: Tree) -> None:
         ttk.Scrollbar.__init__(self, parent, orient='vertical', command=obj.yview)
         self.grid(row=1, column=2, sticky='ns')
 
@@ -410,7 +410,7 @@ class DropdownMenu(ttk.OptionMenu):
     _menu_name = ''
     
     
-    def __init__(self, parent, name):
+    def __init__(self, parent: TabAdd | tk.Toplevel, name: str) -> None:
         self._menu_name = name
         self._selected = tk.StringVar()
         self._selected.set(self._dropdown_menus[name][0])
@@ -418,11 +418,11 @@ class DropdownMenu(ttk.OptionMenu):
         self.grid(row=1, column=self._column_indexes[name], sticky='ew', **{'padx': self._paddings[name], 'pady': [10, 20]})
     
     
-    def get_selected(self):
+    def get_selected(self) -> None:
         return self._selected.get()
     
     
-    def set_selected(self, attribute, value):
+    def set_selected(self, attribute: str, value: int | str) -> None:
         if attribute == 'day' or attribute == 'month':
             self._selected.set(self._dropdown_menus[self._menu_name][value - 1])
         if attribute == 'year' or attribute == 'status':
@@ -430,7 +430,7 @@ class DropdownMenu(ttk.OptionMenu):
             self._selected.set(self._dropdown_menus[self._menu_name][index])
     
     
-    def reset_selected(self):
+    def reset_selected(self) -> None:
         self._selected.set(self._dropdown_menus[self._menu_name][0])
 
 
@@ -442,7 +442,7 @@ class InputField(ttk.Entry):
     _placeholder = ''
     
     
-    def __init__(self, parent, name):
+    def __init__(self, parent: TabAdd | tk.Toplevel, name: str) -> None:
         self._input_text = tk.StringVar(parent, self._input_fields[name])
         ttk.Entry.__init__(self, parent, textvariable=self._input_text, font=('Time New Roman', 13))
         self._placeholder = self._input_fields[name]
@@ -451,28 +451,28 @@ class InputField(ttk.Entry):
         self.grid(row=self._indexes[name][0], column=self._indexes[name][1], columnspan=5, sticky='nsew', **{'padx': 150, 'pady': [5, 0]})
     
     
-    def get_text(self):
+    def get_text(self) -> str:
         return self._input_text.get()
     
     
-    def set_text(self, text):
+    def set_text(self, text: str) -> None:
         self.delete(0, tk.END)
         self.insert(0, text)
     
     
-    def _fill_placeholder(self):
+    def _fill_placeholder(self) -> None:
         input_text = self._input_text.get().strip()
         if input_text == '':
             self.insert(0, self._placeholder)
     
     
-    def _clear_placeholder(self):
+    def _clear_placeholder(self) -> None:
         input_text = self._input_text.get()
         if input_text and input_text == self._placeholder:
             self.delete(0, tk.END)
     
     
-    def reset_placeholder(self):
+    def reset_placeholder(self) -> None:
         self.delete(0, tk.END)
         self.insert(0, self._placeholder)
 
@@ -482,31 +482,22 @@ class AddLabel(ttk.Label):
     _labels = {'source': 'Tööportall/Viis', 'day': 'Kuupäev', 'month': 'Kuu', 'year': 'Aasta', 'status': 'Staatus'}
     _column_indexes = {'source': 0, 'day': 1, 'month': 2, 'year': 3, 'status': 4}
     
-    def __init__(self, parent, name):
+    def __init__(self, parent: TabAdd, name: str) -> None:
         ttk.Label.__init__(self, parent, text=self._labels[name], font=('Times New Roman', 13))
         self.grid(row=0, column=self._column_indexes[name])
 
 
 class StatsLabel(ttk.Label):
     
-#     _grid_indexes = {
-#         0:  [ 0, 0],  1: [ 1, 0],  2: [ 1, 1],  3: [ 1, 2],  4: [ 1, 3], # Kokku
-#         5:  [ 2, 0],  6: [ 3, 0],  7: [ 3, 1],  8: [ 3, 2],  9: [ 3, 3], # CVKeskus
-#         10: [ 4, 0], 11: [ 5, 0], 12: [ 5, 1], 13: [ 5, 2], 14: [ 5, 3], # cv.ee
-#         15: [ 6, 0], 16: [ 7, 0], 17: [ 7, 1], 18: [ 7, 2], 19: [ 7, 3], # Tootukassa
-#         20: [ 8, 0], 21: [ 9, 0], 22: [ 9, 1], 23: [ 9, 2], 24: [ 9, 3], # E-kiri
-#         25: [10, 0], 26: [11, 0], 27: [11, 1], 28: [11, 2], 29: [11, 3] # Muu
-#     }
-    
-    def __init__(self, parent, text, index):
+    def __init__(self, parent: TabStats, text: str, index: int) -> None:
         _font_size = 15 if index % 5 == 0 else 13
         ttk.Label.__init__(self, parent, text=text, font=('Times New Roman', _font_size))
         _row = index // 5 * 2
         _row += 0 if index % 5 == 0 else 1
         _column = index % 5 - 1 if index % 5 > 0 else 0
-        _pady = [35, 5] if index % 5 == 0 else 5
+        _pady = (35, 5) if index % 5 == 0 else 5
         _columnspan = 4 if index % 5 == 0 else 1
-        self.grid(row=_row, column=_column, columnspan=_columnspan, padx=[65, 40], pady=_pady)        
+        self.grid(row=_row, column=_column, columnspan=_columnspan, padx=(65, 40), pady=_pady)        
 
 
 root = Root()

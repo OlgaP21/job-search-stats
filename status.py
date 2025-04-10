@@ -14,12 +14,9 @@ class Status(Enum):
             return Status.Refusal
         if status == 'Vastust pole':
             return Status.Unanswered
-        # Throw an exception
-        # Unknown status type (?)
-        pass
     
     
-    def __str__(self):
+    def __str__(self) -> str:
         if type(self.value) is str:
             return self.value
         else:

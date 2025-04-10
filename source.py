@@ -25,7 +25,7 @@ class Source(Enum):
         return None
     
     
-    def __str__(self):
+    def __str__(self) -> str:
         if type(self.value) is str:
             return self.value
         else:
