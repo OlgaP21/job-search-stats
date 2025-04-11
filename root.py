@@ -237,8 +237,8 @@ class Tree(ttk.Treeview):
             self.heading(key, text=self._columns[key])
     
     
-    def _load_data(self, name: str) -> None:
-        tab_data = Data.load_data(name)
+    def _load_data(self, name: str, load: bool=True) -> None:
+        tab_data = Data.load_data(name, load)
         if tab_data:
             for index, row in enumerate(tab_data):
                 row.insert(0, str(index + 1))
@@ -365,13 +365,14 @@ class Tree(ttk.Treeview):
         application_data = [source, day, month, year, status, title, company]
         Data.update_entry(self.tab_name, self._entry_record[0] - 1, application_data)
         self._update_table()
+        self._parent.update_stats()
         self._top.destroy()
         self._top.update()
     
     
     def _update_table(self) -> None:
         self._clear_table()
-        self._load_data(self.tab_name)
+        self._load_data(self.tab_name, load=False)
     
     
     def _clear_table(self) -> None:

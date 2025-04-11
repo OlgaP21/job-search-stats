@@ -32,9 +32,9 @@ class Data:
     
     # Method for loading specified Source data from the file
     @staticmethod
-    def load_data(source: str) -> list[str] | bool:
+    def load_data(source: str, load: bool) -> list[str] | bool:
         Data._get_filename(source)
-        return Data._load_from_file(Data._current_file)
+        return Data._load_from_file(Data._current_file, load)
     
     
     # Method to get appropriate filename from Source name
@@ -54,7 +54,7 @@ class Data:
     
     
     @staticmethod
-    def _load_from_file(filename: str) -> list[str] | bool:
+    def _load_from_file(filename: str, load: bool) -> list[str] | bool:
         if not Data._file_exists(filename):
             return False
         applications = []
@@ -64,7 +64,8 @@ class Data:
                     application = pickle.load(input_file)
                     applications.append(application.get_data())
                     status = Data._status_to_index[str(application.get_status())]
-                    Stats.update(Data._source, status)
+                    if load:
+                        Stats.update(Data._source, status)
                 except EOFError:
                     break
         return applications
@@ -118,9 +119,9 @@ class Data:
         applications = Data._load_objects_data(source)
         if not applications:
             return
+        old_status = Data._status_to_index[str(applications[index].get_status())]
+        new_status = Data._status_to_index[application_data[4]]
         if applications[index].update(application_data):
-            old_status = Data._status_to_index[str(applications[index].get_status())]
-            new_status = Data._status_to_index[application_data[4]]
             Data._update_file(applications)
             Stats.update(Data._source, new_status, old_status)
     
